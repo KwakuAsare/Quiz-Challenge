@@ -21,7 +21,7 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: #eee;
+    background: #ebebeb;
     font-family: 'Oxygen', sans-serif;
 }
 
@@ -38,6 +38,31 @@ body {
 }
 #submit:hover {
     background: #493352;
+}
+
+.start-cont {
+    background: #003300;
+    padding: 20px 30px;
+    width: 70vw;
+    max-width: 300px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 5px 5px #000;
+}
+
+#start {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #33cc33;
+    color: #fff;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+#start:hover {
+    background: #1f7a1f;
 }
 
 #quiz {

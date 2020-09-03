@@ -1,8 +1,58 @@
 var quizCont = document.getElementById("quiz");
 var resultsCont = document.getElementById("results");
-var submitBtn = document.getElementById("submit");
+//var submitBtn = document.getElementById("submit");
 var currentQuestion = 0;
 var quesCorrect = 0;
+var hidden = document.getElementsByClassName("hide");
+var startCont = document.getElementsByClassName("start-cont");
+var highscores = document.getElementById("quizscores");
+var scoreBoard = document.getElementById("board-table");
+var scores = document.getElementById("score");
+var scoreName = document.getElementById("scoreName");
+var submitScore = document.getElementById("submit");
+var quizScoreList = [];
+var winObj = {};
+var nxtBtn = document.getElementById("next");
+var backBtn = document.getElementById("back");
+var clearHigh = document.getElementById("clearhighscores");
+
+//Timer function
+var timerElement = document.getElementById("timer");
+var seconds = 0;
+
+var quizTimer = setInterval(startTimer, 1000);
+function startTimer() {
+    seconds++;
+    timerElement.textContent  = "timer:" + seconds;
+}
+function stopTimer() {
+    clearInterval(quizTimer);
+}
+//Timer Fucntion ends
+
+// start quiz homepage
+quizCont.style.display = "none";
+highscores.style.display = "none";
+//stopTimer();
+timerElement.style.display = "none";
+nxtBtn.style.display = "none";
+backBtn.style.display = "none";
+clearHigh.style.display = "none";
+
+
+var startBtn = document.getElementById("start");
+startBtn.addEventListener("click", function() {
+    startTimer();
+    showQuestions();
+    startCont[0].style.display = "none";
+    timerElement.style.display = "flex";
+    hidden[0].style.display = "block";
+    hidden[1].style.display = "block";
+    hidden[2].style.display = "none";
+    nxtBtn.style.display = "block";
+});
+
+// Actual Quiz Questions
 
 var questions = [{
 
@@ -117,14 +167,10 @@ var questions = [{
 ];
 function showQuestions() {
 
-   
-    
-
-
     var outlet = [];
     var answers;
     console.log(questions)
-   var i = currentQuestion; 
+    var i = currentQuestion; 
    // for (i = 0; i < questions.length; i++) {
        answers = [];
         for (letter in questions[i].answers) {
@@ -142,10 +188,7 @@ function showQuestions() {
         );
    // }
    
-   
-
     quizCont.innerHTML = outlet.join('');
-
 
 }
 function showResults() {
@@ -171,23 +214,98 @@ console.log(questions[currentQuestion]);
             ansCont.style.color = "red";
         }
     
-    resultsCont.innerHTML = quesCorrect + "out of" + questions.length;
+    resultsCont.innerHTML = quesCorrect + " out of " + questions.length;
 
     currentQuestion++;
     showQuestions();
+    if (currentQuestion >= 10) {
+        console.log(finii);
+    }
 
 }
+
+
+
+
+// After Quiz Scores
+
+init();
+function init() {
+    var savedScores = JSON.parse(localStorage.getItem("scores"));
+    if (savedScores !== null) {
+        quizScoreList = savedScores;
+    }
+    displayScores();
+}
+
+function saveQuizScores() {
+    localStorage.setItem("scores", JSON.stringify(quizScoreList));
+}
+
+function displayScores() {
+    scoreBoard.innerHTML = "";
+    for (var i = 0; i < quizScoreList.length; i++) {
+        var pass = quizScoreList[i];
+        var newRow = document.createElement("tr");
+        var newName = document.createElement("td");
+        var newScore = document.createElement("td");
+        newName.textContent = quizScoreList[i].name;
+        newScore.textContent = quizScoreList[i].score;
+        newRow.appendChild(newName);
+        newRow.appendChild(newScore);
+        scoreBoard.appendChild(newRow);
+    }
+}
+
+
+
+
+
+
+nxtBtn.onclick = function() {
+    console.log("click me");
+    showResults();
+}
+
+backBtn.onclick = function() {
+    console.log("click me");
+}
+clearHigh.onclick = function() {
+        console.log("click me");
+}
+
+submitScore.addEventListener("click", function(e) {
+    event.preventDefault();
+    var nameText = scoreName.nodeValue.trim();
+    if (nameText === "") {
+        return;
+    }
+    winObj.name = nameText;
+    winObj.score = score;
+    quizScoreList.push(winObj);
+    scoreName.value = "";
+    saveQuizScores();
+    displayScores();
+});
+
+
+
+
+
+
+
+
 // update quizCont.Html to display input and submit
-function enterInitials () {}
+//function enterInitials () {}
 // take input and quesCorrect and save to local storage and redirect to hiscores.HTML
-function saveInitials() {}
+//function saveInitials() {}
 
 
-function developQuiz() {
+//function developQuiz() {
    
    
 
-        showQuestions();
+       // showQuestions();
 
     
 
@@ -200,22 +318,8 @@ function developQuiz() {
    
     //developQuiz(questions, quizCont, resultsCont, submitBtn);
 
-}
-developQuiz();
-
-submitBtn.onclick = function() {
-    console.log("click me");
-    showResults();
-}
-
-
-
-
-
-
-
-
-
+//}
+//developQuiz();
 
 
 //function showQuestions() {}
