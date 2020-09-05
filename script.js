@@ -1,6 +1,6 @@
 var quizCont = document.getElementById("quiz");
 var resultsCont = document.getElementById("results");
-//var submitBtn = document.getElementById("submit");
+var submitBtn = document.getElementById("submit");
 var currentQuestion = 0;
 var quesCorrect = 0;
 var hidden = document.getElementsByClassName("hide");
@@ -15,7 +15,8 @@ var winObj = {};
 var nxtBtn = document.getElementById("next");
 var backBtn = document.getElementById("back");
 var clearHigh = document.getElementById("clearhighscores");
-
+var viewBtn = document.getElementById("view");
+// var answers;
 //Timer function
 var timerElement = document.getElementById("timer");
 var seconds = 0;
@@ -39,6 +40,11 @@ nxtBtn.style.display = "none";
 backBtn.style.display = "none";
 clearHigh.style.display = "none";
 
+viewBtn.addEventListener("click", function() {
+    console.log("clicked");
+    displayScores();
+
+});
 
 var startBtn = document.getElementById("start");
 startBtn.addEventListener("click", function() {
@@ -48,7 +54,7 @@ startBtn.addEventListener("click", function() {
     timerElement.style.display = "flex";
     hidden[0].style.display = "block";
     hidden[1].style.display = "block";
-    hidden[2].style.display = "none";
+    //hidden[2].style.display = "none";
     nxtBtn.style.display = "block";
 });
 
@@ -129,6 +135,7 @@ var questions = [{
            c: "Pele",
            d: "Miroslav Klose",
        },
+       correctAns: "d",
    },
 
    {
@@ -139,7 +146,7 @@ var questions = [{
           c: "Clarence Seedorf", 
           d: "Xabi Alonso",
         },
-      correctans: "c",
+      correctAns: "c",
    },
 
    {
@@ -165,14 +172,28 @@ var questions = [{
    },
 
 ];
+
 function showQuestions() {
+    var i = currentQuestion; 
+if (!questions[i] ) {
+    displayScores();
+    stopTimer();
+    highscores.style.display = "block";
+    nxtBtn.style.display = "none";
+    quizCont.style.display = "none";
+    backBtn.style.display = "block";
+    clearHigh.style.display = "block";
+    
+    return false
+}
+    console.log(questions[i]);
 
     var outlet = [];
     var answers;
     console.log(questions)
-    var i = currentQuestion; 
+    
    // for (i = 0; i < questions.length; i++) {
-       answers = [];
+        answers = [];
         for (letter in questions[i].answers) {
             answers.push(
                 '<label class="slide">'
@@ -218,9 +239,9 @@ console.log(questions[currentQuestion]);
 
     currentQuestion++;
     showQuestions();
-    if (currentQuestion >= 10) {
-        console.log(finii);
-    }
+    // if (currentQuestion >= 10) {
+    //     //console.log(finii);
+    // }
 
 }
 
@@ -235,7 +256,7 @@ function init() {
     if (savedScores !== null) {
         quizScoreList = savedScores;
     }
-    displayScores();
+    
 }
 
 function saveQuizScores() {
@@ -250,11 +271,15 @@ function displayScores() {
         var newName = document.createElement("td");
         var newScore = document.createElement("td");
         newName.textContent = quizScoreList[i].name;
-        newScore.textContent = quizScoreList[i].score;
+        newScore.textContent = quesCorrect;
         newRow.appendChild(newName);
         newRow.appendChild(newScore);
         scoreBoard.appendChild(newRow);
+       backBtn.style.display = "block";
+       clearHigh.style.display = "block";
+        
     }
+    scores.innerText = quesCorrect;
 }
 
 
@@ -267,16 +292,29 @@ nxtBtn.onclick = function() {
     showResults();
 }
 
-backBtn.onclick = function() {
+
+
+backBtn.onclick = function(event) {
+    event.preventDefault();
     console.log("click me");
+    highscores.style.display = "none";
+    startCont[0].style.display = "block";
+    timerElement.style.display = "none";
+    backBtn.style.display = "none";
+    resultsCont.style.display = "none";
+    clearHigh.style.display = "none";
+
 }
 clearHigh.onclick = function() {
         console.log("click me");
+        localStorage.clear();
+        displayScores();
+
 }
 
 submitScore.addEventListener("click", function(e) {
     event.preventDefault();
-    var nameText = scoreName.nodeValue.trim();
+    var nameText = scoreName.value.trim();
     if (nameText === "") {
         return;
     }
